@@ -1,4 +1,3 @@
-// Modelo para persistência das mensagens
 class Message {
   //final ChatMessageSender messageSender;
   final ChatMessageType messageType;

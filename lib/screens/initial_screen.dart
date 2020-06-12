@@ -107,8 +107,12 @@ class _InitialScreenState extends State<InitialScreen> {
   // MENSAGENS À ESQUERDA
   Widget _showReceivedMessage(Message chatMessage) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(8.0, 0.0, 64.0, 0.0),
-      leading: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
+      contentPadding: EdgeInsets.fromLTRB(8.0, 0.0, 64.0, 0.0),      
+      leading: CircleAvatar(
+        radius: 25,
+        backgroundImage: AssetImage('images/elderly.jpg'),
+      ),
+      //leading: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
       title: Text(chatMessage.name, textAlign: TextAlign.left),
       subtitle: Text(chatMessage.text, textAlign: TextAlign.left),
     );
