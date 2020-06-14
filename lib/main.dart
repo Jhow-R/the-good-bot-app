@@ -11,11 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: "/splash",
-      routes: {        
-        "/": (context) => InitialScreen(),
-        "/splash": (context) => SplashScreen(),
-      },
+      // initialRoute: "/splash",
+      // routes: {        
+      //   "/": (context) => InitialScreen(),
+      //   "/splash": (context) => SplashScreen(),
+      // },
+      home: SplashScreen(),
     );
   }
 }

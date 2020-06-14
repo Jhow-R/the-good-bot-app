@@ -17,7 +17,6 @@ class _InitialScreenState extends State<InitialScreen> {
   Widget build(BuildContext context) {
     //username = ModalRoute.of(context).settings.arguments;
     username = "Jhow";
-
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
@@ -32,7 +31,7 @@ class _InitialScreenState extends State<InitialScreen> {
               _buildUserInput(),
             ],
           ),
-        ));
+        ));        
   }
 
   // #region Widgets
