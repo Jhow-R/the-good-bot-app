@@ -18,19 +18,21 @@ class _InitialScreenState extends State<InitialScreen> {
     //username = ModalRoute.of(context).settings.arguments;
     username = "Jhow";
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color.fromRGBO(0, 0, 128, 1),
-        title: Text("The Good Bot"),
-      ),
-      body: Column(
-        children: <Widget>[
-          _buildMessageList(),
-          Divider(height: 1.0),
-          _buildUserInput(),
-        ],
-      ),
-    );
+    return new WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(0, 0, 128, 1),
+            title: Text("The Good Bot"),
+          ),
+          body: Column(
+            children: <Widget>[
+              _buildMessageList(),
+              Divider(height: 1.0),
+              _buildUserInput(),
+            ],
+          ),
+        ));
   }
 
   // #region Widgets
@@ -107,10 +109,10 @@ class _InitialScreenState extends State<InitialScreen> {
   // MENSAGENS À ESQUERDA
   Widget _showReceivedMessage(Message chatMessage) {
     return ListTile(
-      contentPadding: EdgeInsets.fromLTRB(8.0, 0.0, 64.0, 0.0),      
+      contentPadding: EdgeInsets.fromLTRB(8.0, 0.0, 64.0, 0.0),
       leading: CircleAvatar(
         radius: 25,
-        backgroundImage: AssetImage('images/elderly.jpg'),
+        backgroundImage: AssetImage('icon.png'),
       ),
       //leading: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
       title: Text(chatMessage.name, textAlign: TextAlign.left),
@@ -120,6 +122,28 @@ class _InitialScreenState extends State<InitialScreen> {
   // #endregion
 
   // #region Métodos
+  // CONFIRMAÇÃO DO FECHAMENTO DO APP
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Tem certeza?'),
+            content: new Text('Você quer sair do app?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('Não'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Sim'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   // COMUNICAR COM O GOOGLE CLOUD
   Future _dialogFlowRequest({String query}) async {
     // Mensagem temporária "Escrevendo..." na lista
