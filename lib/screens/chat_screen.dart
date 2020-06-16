@@ -22,7 +22,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Color.fromRGBO(0, 0, 128, 1),
-            title: Text("The Good Bot"),
+            title: Text("The Good Bot", style: TextStyle(fontFamily: 'Robot')),
           ),
           body: Column(
             children: <Widget>[

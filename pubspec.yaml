@@ -57,9 +57,19 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/credentials.json
+    - assets/teste.json
     - images/elderly.jpg
     - images/icon.png
     - images/smile.jpg
+
+  fonts:
+    - family: Bellota
+      fonts:
+        - asset: fonts/Bellota-Bold.ttf        
+    - family: Robot
+      fonts:
+        - asset: fonts/robotfont.ttf
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

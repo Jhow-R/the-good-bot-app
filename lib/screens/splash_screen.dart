@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:the_good_bot/screens/initial_screen.dart';
-import 'package:the_good_bot/screens/chat_screen.dart';
+import 'package:the_good_bot/screens/initial_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,9 +12,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.restoreSystemUIOverlays();
     Future.delayed(Duration(seconds: 5)).then((_) {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ChatScreen()));
+          context, MaterialPageRoute(builder: (context) => InitialScreen()));
     });
   }
 
