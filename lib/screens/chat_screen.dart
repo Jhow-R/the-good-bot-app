@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:the_good_bot/models/message.dart';
+import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
   @override
@@ -15,8 +16,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //username = ModalRoute.of(context).settings.arguments;
-    username = "Jhow";
+    username = ModalRoute.of(context).settings.arguments;
     return new WillPopScope(
         onWillPop: _onWillPop,
         child: Scaffold(
@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
               _buildUserInput(),
             ],
           ),
-        ));        
+        ));
   }
 
   // #region Widgets
@@ -111,7 +111,7 @@ class _ChatScreenState extends State<ChatScreen> {
       contentPadding: EdgeInsets.fromLTRB(8.0, 0.0, 64.0, 0.0),
       leading: CircleAvatar(
         radius: 25,
-        backgroundImage: AssetImage('images/elderly.jpg'),
+        backgroundImage: AssetImage('images/avatar.png'),
       ),
       //leading: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
       title: Text(chatMessage.name, textAlign: TextAlign.left),
@@ -134,7 +134,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: new Text('Não'),
               ),
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () => exit(0),
                 child: new Text('Sim'),
               ),
             ],
@@ -153,7 +153,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Comunicação com o Google Cloud (autenticação, envio e resposta da mensagem)
     AuthGoogle authGoogle =
-        await AuthGoogle(fileJson: "assets/credentials.json").build();
+        await AuthGoogle(fileJson: "assets/teste.json").build();
     Dialogflow dialogflow =
         Dialogflow(authGoogle: authGoogle, language: "pt-BR");
     AIResponse response = await dialogflow.detectIntent(query);

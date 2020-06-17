@@ -7,6 +7,7 @@ class InitialScreen extends StatefulWidget {
 
 class _InitialScreenState extends State<InitialScreen> {
   GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  var username;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class _InitialScreenState extends State<InitialScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 30),
                 child: Text(
-                  "Bem Vindo(a)!",
+                  "Olá!",
                   style: TextStyle(
                       fontFamily: 'Bellota', fontSize: 30, color: Colors.white),
                 ),
@@ -39,18 +40,15 @@ class _InitialScreenState extends State<InitialScreen> {
                 padding: EdgeInsets.only(top: 20),
                 child: CircleAvatar(
                   radius: 100,
-                  backgroundColor: Colors.blue[800],
-                  child: CircleAvatar(
-                    radius: 95,
-                    backgroundImage: AssetImage('images/smile.jpg'),
-                  ),
+                  backgroundImage: AssetImage('images/avatar.png'),
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: 20.0),
                 child: Text(
-                  "Saia do tédio e converse com o Seu Zé!",
-                  style: TextStyle(fontSize: 20, color: Colors.white),
+                  "Vamos conversar?",
+                  style: TextStyle(
+                      fontFamily: 'Bellota', fontSize: 20, color: Colors.white),
                 ),
               ),
               SizedBox(
@@ -75,7 +73,9 @@ class _InitialScreenState extends State<InitialScreen> {
                         }
                         return null;
                       },
-                      onSaved: (value) {},
+                      onSaved: (value) {
+                        username = value;
+                      },
                       keyboardType: TextInputType.text,
                     ),
                   ),
@@ -85,7 +85,13 @@ class _InitialScreenState extends State<InitialScreen> {
                 height: 20,
               ),
               RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (formKey.currentState.validate()) {
+                    formKey.currentState.save();
+
+                    Navigator.pushReplacementNamed(context, "/chat", arguments: username);
+                  }
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
                 padding: EdgeInsets.all(0.0),

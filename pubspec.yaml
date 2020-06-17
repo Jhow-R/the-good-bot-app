@@ -58,9 +58,8 @@ flutter:
   assets:
     - assets/credentials.json
     - assets/teste.json
-    - images/elderly.jpg
     - images/icon.png
-    - images/smile.jpg
+    - images/avatar.png
 
   fonts:
     - family: Bellota
