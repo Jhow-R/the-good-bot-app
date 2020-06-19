@@ -14,7 +14,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final controllerText = new TextEditingController();
   final chatbotName = 'Seu Zé';
   var messageList = <Message>[];
-  var username = 'Usuário';
+  var username = '';
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +46,11 @@ class _ChatScreenState extends State<ChatScreen> {
             if (snapshot.connectionState == ConnectionState.done) {
               if (snapshot.data.length > 0) {                
                 return ListView.builder(
-                  reverse: false,
+                  reverse: true,
                   padding: EdgeInsets.all(8.0),
                   itemBuilder: (_, int index) =>
-                      showMessages(snapshot.data[index]),
-                  itemCount: snapshot.data.length,
+                      showMessages(messageList[index]),
+                  itemCount: messageList.length,
                 );
               } else {
                 return Center(
@@ -168,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
     // Comunicação com o Google Cloud (autenticação, envio e resposta da mensagem)
     AuthGoogle authGoogle =
-        await AuthGoogle(fileJson: "assets/teste.json").build();
+        await AuthGoogle(fileJson: "assets/credentials.json").build();
     Dialogflow dialogflow =
         Dialogflow(authGoogle: authGoogle, language: "pt-BR");
     AIResponse response = await dialogflow.detectIntent(query);
