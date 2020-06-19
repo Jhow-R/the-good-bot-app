@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:the_good_bot/models/message.dart';
+import 'package:the_good_bot/repository/messages_repository.dart';
 import 'dart:io';
 
 class ChatScreen extends StatefulWidget {
@@ -9,10 +10,11 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final messageList = <Message>[];
+  MessageRepository messageRepository = MessageRepository();
   final controllerText = new TextEditingController();
   final chatbotName = 'Seu Zé';
-  var username;
+  var messageList = <Message>[];
+  var username = 'Usuário';
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +40,29 @@ class _ChatScreenState extends State<ChatScreen> {
   // LISTA DE MENSAGENS
   Widget _buildMessageList() {
     return Flexible(
-      child: ListView.builder(
-        reverse: true,
-        padding: EdgeInsets.all(8.0),
-        itemBuilder: (_, int index) => showMessages(messageList[index]),
-        itemCount: messageList.length,
-      ),
+      child: FutureBuilder<List>(
+          future: messageRepository.getMessages(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.data.length > 0) {                
+                return ListView.builder(
+                  reverse: false,
+                  padding: EdgeInsets.all(8.0),
+                  itemBuilder: (_, int index) =>
+                      showMessages(snapshot.data[index]),
+                  itemCount: snapshot.data.length,
+                );
+              } else {
+                return Center(
+                  child: Text("Diga olá! :D"),
+                );
+              }
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 
@@ -89,7 +108,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   // MENSAGENS (esquerda ou direita)
   Widget showMessages(Message chatMessage) {
-    return chatMessage.messageType == ChatMessageType.sent
+    return chatMessage.messageType == "sent"
         ? _showSentMessage(chatMessage)
         : _showReceivedMessage(chatMessage);
   }
@@ -99,8 +118,8 @@ class _ChatScreenState extends State<ChatScreen> {
       {EdgeInsets padding, TextAlign textAlign}) {
     return ListTile(
       contentPadding: EdgeInsets.fromLTRB(64.0, 0.0, 8.0, 0.0),
-      trailing: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
-      title: Text(chatMessage.name, textAlign: TextAlign.right),
+      trailing: CircleAvatar(child: Text(username.toUpperCase()[0])),
+      title: Text(username, textAlign: TextAlign.right),
       subtitle: Text(chatMessage.text, textAlign: TextAlign.right),
     );
   }
@@ -113,8 +132,7 @@ class _ChatScreenState extends State<ChatScreen> {
         radius: 25,
         backgroundImage: AssetImage('images/avatar.png'),
       ),
-      //leading: CircleAvatar(child: Text(chatMessage.name.toUpperCase()[0])),
-      title: Text(chatMessage.name, textAlign: TextAlign.left),
+      title: Text(chatbotName, textAlign: TextAlign.left),
       subtitle: Text(chatMessage.text, textAlign: TextAlign.left),
     );
   }
@@ -146,10 +164,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // COMUNICAR COM O GOOGLE CLOUD
   Future _dialogFlowRequest({String query}) async {
     // Mensagem temporária "Escrevendo..." na lista
-    addMessage(
-        name: chatbotName,
-        text: 'Escrevendo...',
-        type: ChatMessageType.received);
+    addMessage(name: chatbotName, text: 'Escrevendo...', type: "received");
 
     // Comunicação com o Google Cloud (autenticação, envio e resposta da mensagem)
     AuthGoogle authGoogle =
@@ -167,27 +182,38 @@ class _ChatScreenState extends State<ChatScreen> {
     addMessage(
         name: chatbotName,
         text: response.getMessage() ?? '',
-        type: ChatMessageType.received);
+        // text: 'response',
+        type: "received");
   }
 
   // ENVIAR MENSAGEM
   void sendMessage({String text}) {
     controllerText.clear();
-    addMessage(name: username, text: text, type: ChatMessageType.sent);
+    addMessage(name: username, text: text, type: "sent");
   }
 
   // ADICIONAR MENSAGEM NA LISTA
-  void addMessage({String name, String text, ChatMessageType type}) {
+  Future<void> addMessage({String name, String text, String type}) async {
     var message = Message(text: text, name: name, messageType: type);
 
     setState(() {
       messageList.insert(0, message);
     });
 
-    if (type == ChatMessageType.sent) {
+    if (text != "Escrevendo...") {
+      await messageRepository.create(message);
+    }
+
+    if (type == "sent") {
       // Envia a mensagem para o chatbot e aguarda sua resposta
       _dialogFlowRequest(query: message.text);
     }
   }
+
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   controllerText.dispose();
+  // }
   // #endregion
 }
